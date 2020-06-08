@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>查詢</title>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/all.js"></script>
+    <link rel="stylesheet" href="css.css">
+</head>
+
+<body>
+    <div id="arr" onclick="window.location='index.html';">
+        <i class="fa fa-angle-left" data-fa-transform="grow-25"></i>
+    </div>
+    <header>今天的帳</header>
+    <br>
+    <table>
+        <tbody>
+            <tr>
+                <th>名稱</th>
+                <th>金額</th>
+                <th>日期</th>
+                <th>類別</th>
+            </tr>
+        </tbody>
+    </table>
+    <style>
+        table{
+            border-collapse: collapse;
+            width: 100%
+        }
+        th,tr{
+            height: 60px;
+            font-size: 18px;
+            padding: 8px;
+        }
+        tr:nth-of-type(even){
+            background-color: white;
+        }
+    </style>
+    <script src="http://code.jquery.com/jquery-git.min.js"></script>
+    <script src="/bootstrap.js"></script>
+    <script>
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1;
+        var yyyy = today.getFullYear();
+        if(dd<10) {
+            dd='0'+dd
+        }
+        if(mm<10) {
+            mm='0'+mm
+        }
+        today = yyyy + '-' + mm + '-' + dd;
+        $("#date").val(today);
+        var objs = localStorage.getItem("JSON");
+        if(!objs) objs=[];
+        else objs = JSON.parse(objs);
+        if(objs.length===0){
+            $("table").html("<header>查無資料</header>")
+        }
+        else{
+            objs.forEach(e => {
+                if(e["date"] == today){
+                    $("table").append("<tr><th>"+e["name"]+"</th><th>"+e["cost"]+"</th><th>"+e["date"]+"</th><th>"+e["cate"]+"</th></tr>")
+                }
+            });
+        }   
+
+    </script>
+</body>
+
+</html>

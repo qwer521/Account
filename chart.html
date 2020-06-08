@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/all.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <title>查詢</title>
+    
+    <link rel="stylesheet" href="css.css">
+</head>
+
+<body>
+    <div id="arr" onclick="window.location='index.html';">
+        <i class="fa fa-angle-left" data-fa-transform="grow-25"></i>
+    </div>
+    <header>分析</header>
+    <br>
+    <div id="all">
+        <div class="input">
+            <label>日期:</label>
+            <input id="datef" type="date">
+            <p>~</p>
+            <input id="datet" type="date">
+        </div>
+    </div>
+    <br>
+    <button id="but">確認</button>
+    <canvas id="myChart"></canvas>
+    <style>
+        canvas{
+            display: block;
+            position: relative;
+            width: "400" !important;
+            height: "400" !important;
+
+        }
+        #all{       
+            width: 70%;     
+            transform: translateX(-50%);
+            left: 50%;
+            position: absolute;
+        }
+        .input{
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            white-space: nowrap;
+            border: none;
+        }
+        label{
+            display: inline-block;
+        }
+        p{
+            display: inline-block;
+        }
+        #datef,#datet{
+            width: 48%;
+            height: 43.33px;
+            display: inline-block;
+        }
+        #all{
+             font-size: 25px;
+        }
+        #but{
+            position: relative;
+            background-color: white; 
+            color: black; 
+            border: 2px solid #008CBA;
+            padding: 16px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+            transform: translateX(-50%);
+            left: 50%;
+            margin-top: 5%;
+            border-radius: 5px;
+        }
+        #but:hover {
+            background-color: #008CBA;
+            color: white;
+        }
+    </style>
+    <script src="http://code.jquery.com/jquery-git.min.js"></script>
+    <script src="/bootstrap.js"></script>
+    <script>
+        $(".canvas").attr({"width": innerWidth+"px", "height": innerWidth+"px"});
+            if(innerWidth > 600){
+                $(".canvas").attr({"width": "600px", "height": "600px"});
+            }
+        var button=$("#but")
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1;
+        var yyyy = today.getFullYear();
+        if(dd<10) {
+            dd='0'+dd
+        }
+        if(mm<10) {
+            mm='0'+mm
+        }
+        today = yyyy + '-' + mm + '-' + dd;
+        button.on("click",(e)=>{  
+            dt=$("#datet").val();
+            df=$("#datef").val();
+            if(dt<df)[dt,df] = [df,dt];
+            if(dt==""&&df==""){
+                dt=today;
+                df="2000-01-01";
+            }
+            else if(dt==""){
+                dt=today;
+            }
+            else if(df==""){
+                df="2000-01-01";
+            }
+            var datas=[0,0,0,0,0,0];
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var objs = localStorage.getItem("JSON");
+            if(!objs) objs=[];
+            else objs = JSON.parse(objs);
+            objs.forEach(e => {
+                if(dt>=e["date"]&&df<=e["date"]){
+                    if(e["cate"]=="食"){
+                        datas[0]+=e["cost"]/1;
+                        console.log(datas[0]);
+                    }
+                    else if(e["cate"]=="衣"){
+                        datas[1]+=e["cost"]/1;
+                        console.log(datas[1]);
+                    }
+                    else if(e["cate"]=="住"){
+                        datas[2]+=e["cost"]/1;
+                        console.log(datas[2]);
+                    }
+                    else if(e["cate"]=="行"){
+                        datas[3]+=e["cost"]/1;
+                        console.log(datas[3]);
+                    }
+                    else if(e["cate"]=="育"){
+                        datas[4]+=e["cost"]/1;
+                        console.log(datas[4]);
+                    }
+                    else if(e["cate"]=="樂"){
+                        datas[5]+=e["cost"]/1;
+                        console.log(datas[5]);
+                    }
+                }
+            }); 
+            var catePieChart = new Chart(ctx,{
+                type: 'pie',
+                data: {
+                    datasets: [{
+                        data: datas,
+                        backgroundColor: [
+                            'rgb(255, 99, 132)',
+                            'rgb(54, 162, 235)',
+                            'rgb(255, 206, 86)',
+                            'rgb(75, 192, 192)',
+                            'rgb(153, 102, 255)',
+                            'rgb(255, 159, 64)'
+                        ]
+                    }],
+                    labels: ['食','衣','住','行','育','樂'],
+                    fullWidth: false
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
